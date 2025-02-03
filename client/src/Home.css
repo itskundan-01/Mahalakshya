@@ -1,0 +1,14 @@
+/* body{
+    background-color: black;
+    color: white;
+} */
+#heading{
+    text-align: center;
+    font-size: 3em;
+    margin-top: 1em;
+}
+#sub-heading{
+    text-align: center;
+    font-size: 1.4em;
+    
+}

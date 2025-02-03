@@ -1,0 +1,22 @@
+.dashboard {
+  padding: 20px;
+}
+
+.dashboard nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.dashboard nav ul li {
+  display: inline;
+  margin-right: 15px;
+}
+
+.dashboard nav ul li a {
+  text-decoration: none;
+  color: #3498db;
+}
+
+.dashboard nav ul li a:hover {
+  text-decoration: underline;
+}
