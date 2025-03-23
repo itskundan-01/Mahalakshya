@@ -8,12 +8,17 @@ import userRoutes from './routes/user.js'
 import tradeRoutes from './routes/trades.js'
 import stockRoutes from './routes/stocks.js'
 import twoFARoutes from './routes/2fa.js'
+import adminRoutes from './routes/admin.js'
+import walletRoutes from './routes/wallet.js'  // Add this line
 
 dotenv.config()
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: true, // or specify your client URL like 'http://localhost:3000'
+  credentials: true
+}));
 app.use(express.json())
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -28,6 +33,8 @@ app.use('/api/user', userRoutes)
 app.use('/api/trades', tradeRoutes)
 app.use('/api/stocks', stockRoutes)
 app.use('/api/2fa', twoFARoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/wallet', walletRoutes)  // Add this line
 
 app.get('/', (req, res) => {
   res.send('Server is running')

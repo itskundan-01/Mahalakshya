@@ -1,0 +1,286 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-brand .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-group a {
+  text-decoration: none;
+  color: #5f6368;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nav-group a:hover {
+  color: #1a73e8;
+  background-color: #f1f3f4;
+}
+
+.auth-group {
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid #e0e0e0;
+}
+
+.auth-btn {
+  padding: 0.5rem 1.25rem !important;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.auth-btn.login {
+  color: #1a73e8;
+  background-color: transparent;
+}
+
+.auth-btn.register {
+  color: #fff;
+  background-color: #1a73e8;
+}
+
+.auth-btn.register:hover {
+  background-color: #1557b0;
+  color: #fff;
+}
+
+.logout-btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #bb2d3b;
+}
+
+.admin-link {
+  color: #f59e0b !important;
+}
+
+.fa-setup {
+  color: #10b981 !important;
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown-container {
+  position: relative;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: #333;
+  font-weight: 500;
+  background-color: #f1f3f4;
+  transition: all 0.2s ease;
+}
+
+.profile-button:hover {
+  background-color: #e0e0e0;
+}
+
+.profile-name {
+  margin-right: 8px;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-icon {
+  font-size: 1.2rem;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+  margin-top: 10px;
+  animation: dropdown-fade 0.2s ease;
+}
+
+@keyframes dropdown-fade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-name {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.user-email {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.wallet-preview {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.wallet-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.wallet-balance {
+  margin: 5px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.add-funds-btn {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+  background-color: #0ca678;
+  padding: 5px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-top: 8px;
+}
+
+.add-funds-btn:hover {
+  background-color: #099268;
+}
+
+.dropdown-links {
+  padding: 8px 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f3f4;
+}
+
+.item-icon {
+  margin-right: 10px;
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.logout-item {
+  color: #dc3545;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .navbar-menu {
+    gap: 1rem;
+  }
+  
+  .nav-group {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .navbar-menu {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .nav-group {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+  
+  .auth-group {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .profile-dropdown {
+    width: 260px;
+    right: -70px;
+  }
+  
+  .profile-dropdown:before {
+    right: 85px;
+  }
+}

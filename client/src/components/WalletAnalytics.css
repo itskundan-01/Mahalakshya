@@ -1,0 +1,76 @@
+.wallet-analytics {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.analytics-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.chart-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.chart-type-btn {
+  padding: 8px 16px;
+  background-color: #f1f3f4;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chart-type-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.chart-type-btn.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+}
+
+.no-data-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .analytics-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .chart-selector {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-top: 10px;
+  }
+}

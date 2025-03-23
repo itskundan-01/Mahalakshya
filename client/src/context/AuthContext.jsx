@@ -7,20 +7,30 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      axios.get(`${API_URL}/user/profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(res => setUser(res.data))
-        .catch(() => setUser(null))
+      axios
+        .get(`${API_URL}/user/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setUser(res.data)
+          setLoading(false)
+        })
+        .catch(() => {
+          setUser(null)
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
     }
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   )
