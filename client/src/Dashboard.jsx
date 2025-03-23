@@ -6,6 +6,7 @@ import { AuthContext } from './context/AuthContext';
 import { API_URL } from './config';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
+import MarketChart from './components/MarketChart';
 
 function Dashboard() {
   const [marketIndices, setMarketIndices] = useState([]);
@@ -228,26 +229,12 @@ function Dashboard() {
       
       {/* Chart and Details Section */}
       <div className="chart-details-container">
-        <div className="market-chart">
-          <h3>{selectedIndex ? selectedIndex.name : 'Market'} Movement</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis domain={['dataMin - 100', 'dataMax + 100']} />
-              <Tooltip formatter={(value) => [`₹${value.toLocaleString()}`, 'Value']} />
-              <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="value" 
-                name={selectedIndex ? selectedIndex.name : 'Price'} 
-                stroke="#8884d8" 
-                activeDot={{ r: 8 }} 
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <MarketChart 
+          data={chartData} 
+          indexName={selectedIndex?.name || 'Market'} 
+          indexId={selectedIndex?.id || 'market'}
+          onTimeRangeChange={timeRange => generateChartData(selectedIndex.id, timeRange)}
+        />
         
         {selectedIndex && (
           <div className="index-details">

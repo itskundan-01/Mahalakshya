@@ -21,9 +21,6 @@ const getOrCreateWallet = async (userId) => {
 
 // Buy Stock
 router.post('/buy', auth, async (req, res) => {
-  const session = await mongoose.startSession()
-  session.startTransaction()
-  
   try {
     const { stockSymbol, quantity, price } = req.body
     const totalCost = quantity * price
@@ -51,11 +48,11 @@ router.post('/buy', auth, async (req, res) => {
       quantity,
       price,
     })
-    await trade.save({ session })
+    await trade.save()
     
     // Update wallet
     wallet.balance -= totalCost
-    await wallet.save({ session })
+    await wallet.save()
     
     // Record transaction
     const transaction = new Transaction({
@@ -67,9 +64,7 @@ router.post('/buy', auth, async (req, res) => {
       balanceBefore,
       balanceAfter: wallet.balance
     })
-    await transaction.save({ session })
-    
-    await session.commitTransaction()
+    await transaction.save()
     
     res.status(201).json({
       ...trade.toObject(),
@@ -77,18 +72,12 @@ router.post('/buy', auth, async (req, res) => {
     })
     
   } catch (error) {
-    await session.abortTransaction()
     res.status(400).json({ error: error.message })
-  } finally {
-    session.endSession()
   }
 })
 
 // Sell Stock
 router.post('/sell', auth, async (req, res) => {
-  const session = await mongoose.startSession()
-  session.startTransaction()
-  
   try {
     const { stockSymbol, quantity, price } = req.body
     const saleProceeds = quantity * price
@@ -110,11 +99,11 @@ router.post('/sell', auth, async (req, res) => {
       quantity,
       price,
     })
-    await trade.save({ session })
+    await trade.save()
     
     // Update wallet
     wallet.balance += saleProceeds
-    await wallet.save({ session })
+    await wallet.save()
     
     // Record transaction
     const transaction = new Transaction({
@@ -126,9 +115,7 @@ router.post('/sell', auth, async (req, res) => {
       balanceBefore,
       balanceAfter: wallet.balance
     })
-    await transaction.save({ session })
-    
-    await session.commitTransaction()
+    await transaction.save()
     
     res.status(201).json({
       ...trade.toObject(),
@@ -136,10 +123,7 @@ router.post('/sell', auth, async (req, res) => {
     })
     
   } catch (error) {
-    await session.abortTransaction()
     res.status(400).json({ error: error.message })
-  } finally {
-    session.endSession()
   }
 })
 

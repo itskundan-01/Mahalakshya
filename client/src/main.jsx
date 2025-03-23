@@ -18,6 +18,7 @@ import Wallet from './Wallet'
 import Navbar from './Navbar'
 import Profile from './Profile'  // Import the Profile component
 import Settings from './Settings'  // Import the Settings component
+import StockDetails from './pages/StockDetails'  // Add this import
 import './main.css'
 import { AuthProvider } from './context/AuthContext'
 import { WalletProvider } from './context/WalletContext'
@@ -138,6 +139,10 @@ createRoot(document.getElementById('root')).render(
                   <Settings />
                 </ProtectedRoute>
               }
+            />
+            <Route 
+              path="/stock/:symbol" 
+              element={<StockDetails />}
             />
           </Routes>
           <ToastContainer />

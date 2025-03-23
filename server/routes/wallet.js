@@ -36,9 +36,6 @@ router.get('/transactions', auth, async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     
-    // Make logging less verbose
-    // console.log(`Fetching transactions for user ${req.user} (page ${page}, limit ${limit})`)
-    
     // Get total count for pagination info
     const totalCount = await Transaction.countDocuments({ user: req.user });
     
@@ -46,9 +43,6 @@ router.get('/transactions', auth, async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
-    
-    // Make logging less verbose
-    // console.log(`Found ${transactions.length} transactions out of ${totalCount} total`)
     
     res.json({
       transactions,
@@ -67,9 +61,6 @@ router.get('/transactions', auth, async (req, res) => {
 
 // Add virtual funds (deposit)
 router.post('/deposit', auth, async (req, res) => {
-  const session = await mongoose.startSession()
-  session.startTransaction()
-  
   try {
     const { amount } = req.body
     
@@ -85,7 +76,7 @@ router.post('/deposit', auth, async (req, res) => {
     
     // Update wallet balance
     wallet.balance += parseFloat(amount)
-    await wallet.save({ session })
+    await wallet.save()
     
     // Record transaction
     const transaction = new Transaction({
@@ -97,9 +88,7 @@ router.post('/deposit', auth, async (req, res) => {
       balanceAfter: wallet.balance
     })
     
-    await transaction.save({ session })
-    
-    await session.commitTransaction()
+    await transaction.save()
     
     res.json({
       message: 'Deposit successful',
@@ -108,11 +97,8 @@ router.post('/deposit', auth, async (req, res) => {
     })
     
   } catch (error) {
-    await session.abortTransaction()
     console.error('Deposit error:', error)
     res.status(500).json({ error: 'Error processing deposit' })
-  } finally {
-    session.endSession()
   }
 })
 

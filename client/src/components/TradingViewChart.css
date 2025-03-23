@@ -1,0 +1,365 @@
+.trading-view-chart {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Dark theme */
+.trading-view-chart.dark {
+  background-color: #131722;
+  color: #D1D4DC;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tv-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tv-chart-symbol-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.dark .tv-chart-symbol-info h3 {
+  color: #D1D4DC;
+}
+
+.tv-chart-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tv-time-selector, .tv-chart-type-selector, .tv-chart-indicators {
+  display: flex;
+  align-items: center;
+  background-color: #F0F3FA;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dark .tv-time-selector,
+.dark .tv-chart-type-selector,
+.dark .tv-chart-indicators {
+  background-color: #2A2E39;
+}
+
+.tv-time-selector button,
+.tv-chart-type-selector button,
+.tv-chart-indicators button {
+  background: none;
+  border: none;
+  padding: 5px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #58606E;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.dark .tv-time-selector button,
+.dark .tv-chart-type-selector button,
+.dark .tv-chart-indicators button {
+  color: #B2B5BE;
+}
+
+.tv-time-selector button:hover,
+.tv-chart-type-selector button:hover,
+.tv-chart-indicators button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .tv-time-selector button:hover,
+.dark .tv-chart-type-selector button:hover,
+.dark .tv-chart-indicators button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tv-time-selector button.active,
+.tv-chart-type-selector button.active,
+.tv-chart-indicators button.active {
+  background-color: #2962FF;
+  color: white;
+}
+
+.dark .tv-time-selector button.active,
+.dark .tv-chart-type-selector button.active,
+.dark .tv-chart-indicators button.active {
+  background-color: #2962FF;
+  color: white;
+}
+
+.tv-theme-toggle {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  background-color: #F0F3FA;
+  transition: all 0.2s;
+}
+
+.dark .tv-theme-toggle {
+  background-color: #2A2E39;
+}
+
+.tv-theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark .tv-theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tv-chart-container {
+  position: relative;
+  margin-top: 5px;
+  border: 1px solid #E0E3EB;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 450px;
+}
+
+.dark .tv-chart-container {
+  border-color: #2A2E39;
+}
+
+/* Tooltip styling */
+.tv-chart-tooltip {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid #E0E3EB;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  font-size: 0.85rem;
+  z-index: 100;
+}
+
+.dark .tv-chart-tooltip {
+  background-color: rgba(30, 34, 45, 0.95);
+  border-color: #2A2E39;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tv-tooltip-date {
+  font-size: 0.8rem;
+  color: #58606E;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #E0E3EB;
+  font-weight: 500;
+}
+
+.dark .tv-tooltip-date {
+  color: #B2B5BE;
+  border-bottom-color: #2A2E39;
+}
+
+.tv-tooltip-price-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.tv-tooltip-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.tv-tooltip-label {
+  font-weight: 600;
+  color: #58606E;
+}
+
+.dark .tv-tooltip-label {
+  color: #B2B5BE;
+}
+
+.tv-tooltip-value {
+  font-weight: 500;
+  color: #1E2329;
+}
+
+.dark .tv-tooltip-value {
+  color: #D1D4DC;
+}
+
+.tv-tooltip-change {
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid #E0E3EB;
+  text-align: right;
+  font-weight: 600;
+}
+
+.dark .tv-tooltip-change {
+  border-top-color: #2A2E39;
+}
+
+.tv-tooltip-change.positive {
+  color: #26A69A;
+}
+
+.tv-tooltip-change.negative {
+  color: #EF5350;
+}
+
+/* Crosshair styling */
+.tv-crosshair-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.tv-crosshair-vertical {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(88, 96, 110, 0.3);
+}
+
+.dark .tv-crosshair-vertical {
+  background-color: rgba(177, 182, 188, 0.3);
+}
+
+.tv-crosshair-horizontal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(88, 96, 110, 0.3);
+}
+
+.dark .tv-crosshair-horizontal {
+  background-color: rgba(177, 182, 188, 0.3);
+}
+
+.tv-crosshair-label {
+  position: absolute;
+  background-color: #58606E;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.dark .tv-crosshair-label {
+  background-color: #B2B5BE;
+  color: #131722;
+}
+
+.tv-crosshair-label.price-label {
+  transform: translate(10px, -50%);
+  right: 0;
+  left: auto;
+  margin-right: 5px;
+}
+
+.tv-crosshair-label.time-label {
+  transform: translate(-50%, 10px);
+  bottom: 0;
+  top: auto;
+  margin-bottom: 5px;
+}
+
+/* Volume panel */
+.tv-volume-panel {
+  border-top: 1px solid #E0E3EB;
+  margin-top: -1px;
+}
+
+.dark .tv-volume-panel {
+  border-top-color: #2A2E39;
+}
+
+/* Recharts overrides */
+.recharts-default-tooltip {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  font-size: 11px !important;
+}
+
+.recharts-legend-item {
+  margin-right: 15px !important;
+}
+
+.recharts-legend-item-text {
+  font-size: 11px !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tv-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .tv-chart-controls {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .tv-time-selector {
+    flex-wrap: wrap;
+  }
+  
+  .tv-chart-container {
+    height: 380px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tv-chart-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .tv-time-selector, 
+  .tv-chart-type-selector, 
+  .tv-chart-indicators {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .tv-chart-container {
+    height: 300px;
+  }
+}

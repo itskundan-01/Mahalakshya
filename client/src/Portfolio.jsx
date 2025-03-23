@@ -5,6 +5,7 @@ import PortfolioChart from './PortfolioChart'
 import { API_URL } from './config'
 import { toast } from 'react-toastify'
 import './Portfolio.css'
+import ErrorBoundary from './ErrorBoundary'
 
 function Portfolio() {
   const { user } = useContext(AuthContext)
@@ -129,7 +130,9 @@ function Portfolio() {
           </div>
           
           <div className="portfolio-chart-container">
-            <PortfolioChart />
+            <ErrorBoundary>
+              <PortfolioChart />
+            </ErrorBoundary>
           </div>
           
           <div className="holdings-section">
