@@ -11,12 +11,10 @@ function Navbar() {
   const dropdownRef = useRef(null)
   const searchRef = useRef(null)
   const navigate = useNavigate()
-  const location = useLocation() // Added to track current route
+  const location = useLocation()
 
   // Function to check if a link is active
   const isActive = (path) => {
-    // Check if current path starts with the provided path
-    // This handles both exact matches and nested routes
     return location.pathname === path || 
            (path !== '/' && location.pathname.startsWith(path));
   }
@@ -36,8 +34,9 @@ function Navbar() {
   }, [])
 
   const handleLogout = () => {
-    logout()
+    logout() // This will now work correctly
     setDropdownOpen(false)
+    navigate('/') // Optional: navigate to home page after logout
   }
 
   const toggleSearch = () => {
