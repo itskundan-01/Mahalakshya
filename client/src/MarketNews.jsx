@@ -1,109 +1,161 @@
-import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import './MarketNews.css'
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import './MarketNews.css';
+import { FaSync, FaNewspaper } from 'react-icons/fa';
 
 function MarketNews() {
-  const [news, setNews] = useState([])
-  const [category, setCategory] = useState('all')
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setLoading(true);
-    // In a production app, fetch from a real API
-    // For now, using static data to demonstrate the UI
-    const fetchNews = () => {
-      const allNews = [
-        { 
-          id: 1, 
-          category: 'policy', 
-          headline: 'RBI Holds Policy Rates Steady for Fourth Consecutive Meeting', 
-          details: 'The Reserve Bank of India maintained the repo rate at 6.5%, focusing on inflation control.',
-          source: 'Economic Times',
-          date: '2023-10-05',
-          imageUrl: 'https://example.com/rbi-policy.jpg'
-        },
-        { 
-          id: 2, 
-          category: 'sectors', 
-          headline: 'IT Sector Faces Pressure as Global Tech Spending Slows', 
-          details: 'Major Indian IT firms report cautious outlook as clients reduce tech budgets amid global economic uncertainty.',
-          source: 'Business Standard',
-          date: '2023-10-04',
-          imageUrl: 'https://example.com/it-sector.jpg'
-        },
-        { 
-          id: 3, 
-          category: 'markets', 
-          headline: 'Sensex Crosses 73,000 Mark for First Time', 
-          details: 'Indian equity markets reach new milestone driven by strong domestic investment flows.',
-          source: 'Mint',
-          date: '2023-10-03',
-          imageUrl: 'https://example.com/sensex.jpg'
-        },
-        { 
-          id: 4, 
-          category: 'companies', 
-          headline: 'Reliance Industries Unveils Green Energy Roadmap', 
-          details: 'Mukesh Ambani announces ₹75,000 crore investment in clean energy initiatives over next 5 years.',
-          source: 'Financial Express',
-          date: '2023-10-03',
-          imageUrl: 'https://example.com/reliance.jpg'
-        },
-        { 
-          id: 5, 
-          category: 'ipo', 
-          headline: 'LIC Housing Finance Subsidiary Files DRHP for ₹4,500 Crore IPO', 
-          details: 'The company aims to expand operations and strengthen capital base through public offering.',
-          source: 'Money Control',
-          date: '2023-10-02',
-          imageUrl: 'https://example.com/lic-ipo.jpg'
-        },
-        { 
-          id: 6, 
-          category: 'policy', 
-          headline: 'SEBI Tightens Norms for F&O Trading, Increases Margin Requirements', 
-          details: 'New regulations aim to curb excessive speculation and protect retail investors.',
-          source: 'Hindu Business Line',
-          date: '2023-09-30',
-          imageUrl: 'https://example.com/sebi.jpg'
-        },
-        { 
-          id: 7, 
-          category: 'markets', 
-          headline: 'Mutual Fund SIP Inflows Hit Record ₹18,000 Crore in September', 
-          details: 'Indian retail investors continue to show strong faith in equity markets through systematic investments.',
-          source: 'ET Now',
-          date: '2023-09-28',
-          imageUrl: 'https://example.com/mutual-funds.jpg'
-        },
-        { 
-          id: 8, 
-          category: 'companies', 
-          headline: 'Tata Motors Reports 40% YoY Growth in Passenger Vehicle Sales', 
-          details: 'Strong demand for SUVs and electric vehicles drives growth for the automaker.',
-          source: 'NDTV Profit',
-          date: '2023-09-27',
-          imageUrl: 'https://example.com/tata-motors.jpg'
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState('all');
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const API_URL = 'https://stock.indianapi.in/news';
+  const API_KEY = import.meta.env.VITE_STOCK_API_KEY;
+  const NEWS_CACHE_KEY = 'mahalakshya_news_data';
+  const NEWS_CACHE_TIMESTAMP = 'mahalakshya_news_timestamp';
+  
+  // Map API topics to our categories
+  const topicToCategory = {
+    'Funding Activities': 'policy',
+    'Financial Results': 'markets',
+    'Corporate News': 'companies',
+    'Artificial Intelligence': 'technology',
+    'Cost Cutting': 'markets',
+    // Add more mappings as needed
+  };
+  
+  // Enhanced string hash function with better uniqueness
+  const generateUniqueId = (item, index) => {
+    const baseString = `${item.title}-${item.source}-${item.pub_date}-${index}`;
+    let hash = 0;
+    for (let i = 0; i < baseString.length; i++) {
+      const char = baseString.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return `news-${Math.abs(hash).toString(16)}-${index}`;
+  };
+  
+  // Local placeholder image to avoid external requests
+  const PLACEHOLDER_IMAGE = '/assets/news-placeholder.png';
+  
+  const fetchNewsFromAPI = async () => {
+    setRefreshing(true);
+    try {
+      const response = await axios.get(API_URL, {
+        headers: {
+          'x-api-key': API_KEY,
+          'Content-Type': 'application/json'
         }
-      ];
-
-      // Filter news by category if needed
-      const filteredNews = category === 'all' ? 
-        allNews : 
-        allNews.filter(item => item.category === category);
+      });
       
-      setNews(filteredNews);
+      // Format and categorize the news with index-based unique IDs
+      const formattedNews = response.data.map((item, index) => ({
+        id: generateUniqueId(item, index),
+        category: getCategoryFromTopics(item.topics),
+        headline: item.title,
+        details: item.summary,
+        source: item.source,
+        date: new Date(item.pub_date).toISOString().split('T')[0],
+        imageUrl: item.image_url || '', // Don't set a default here, handle it in the render
+        url: item.url,
+        topics: item.topics
+      }));
+      
+      // Store in state and cache
+      setNews(formattedNews);
+      localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(formattedNews));
+      localStorage.setItem(NEWS_CACHE_TIMESTAMP, Date.now().toString());
+      
+      toast.success(`Market news updated successfully`);
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      toast.error('Failed to fetch market news');
+    } finally {
       setLoading(false);
+      setRefreshing(false);
+    }
+  };
+  
+  // Helper function to map topics to categories
+  const getCategoryFromTopics = (topics) => {
+    if (!topics || topics.length === 0) return 'general';
+    
+    for (const topic of topics) {
+      if (topicToCategory[topic]) return topicToCategory[topic];
+    }
+    
+    return 'general'; // Default category
+  };
+  
+  // Effect to load news on component mount
+  useEffect(() => {
+    const loadNews = async () => {
+      setLoading(true);
+      
+      try {
+        // Check if we have cached news data
+        const cachedNews = localStorage.getItem(NEWS_CACHE_KEY);
+        const cachedTimestamp = localStorage.getItem(NEWS_CACHE_TIMESTAMP);
+        
+        // Use cached data if available and less than 1 hour old
+        if (cachedNews && cachedTimestamp) {
+          const now = Date.now();
+          const timestamp = parseInt(cachedTimestamp, 10);
+          const ONE_HOUR = 60 * 60 * 1000; // ms
+          
+          if (now - timestamp < ONE_HOUR) {
+            const parsedNews = JSON.parse(cachedNews);
+            setNews(parsedNews);
+            setLoading(false);
+            return;
+          }
+        }
+        
+        // Fetch fresh data if cache is not available or outdated
+        await fetchNewsFromAPI();
+      } catch (error) {
+        console.error('Error loading news:', error);
+        setLoading(false);
+      }
     };
+    
+    loadNews();
+  }, []);
+  
+  // Filter news based on category selection
+  const filteredNews = category === 'all' 
+    ? news 
+    : news.filter(item => item.category === category);
+  
+  // Handle manual refresh button click
+  const handleRefreshClick = () => {
+    if (refreshing) return;
+    fetchNewsFromAPI();
+  };
 
-    // Simulate API delay
-    setTimeout(fetchNews, 500);
-    toast.success(`Market news updated - ${category} category`);
-  }, [category]);
-
+  // Create a placeholder component instead of using an external URL
+  const NewsPlaceholder = ({source}) => (
+    <div className="placeholder-image">
+      <FaNewspaper size={24} />
+      <span>{source}</span>
+    </div>
+  );
+  
   return (
     <div className="market-news-container">
-      <h2>Indian Market News & Insights</h2>
+      <div className="news-header">
+        <h2>Indian Market News & Insights</h2>
+        <button 
+          className={`refresh-btn ${refreshing ? 'refreshing' : ''}`}
+          onClick={handleRefreshClick}
+          disabled={refreshing}
+          title="Refresh news"
+        >
+          <FaSync /> {refreshing ? 'Updating...' : 'Refresh'}
+        </button>
+      </div>
       
       <div className="news-filters">
         <button 
@@ -131,43 +183,68 @@ function MarketNews() {
           Companies
         </button>
         <button 
-          className={`filter-btn ${category === 'sectors' ? 'active' : ''}`}
-          onClick={() => setCategory('sectors')}
+          className={`filter-btn ${category === 'technology' ? 'active' : ''}`}
+          onClick={() => setCategory('technology')}
         >
-          Sectors
-        </button>
-        <button 
-          className={`filter-btn ${category === 'ipo' ? 'active' : ''}`}
-          onClick={() => setCategory('ipo')}
-        >
-          IPO
+          Technology
         </button>
       </div>
-      
+
       {loading ? (
-        <div className="loading-news">Loading latest market news...</div>
-      ) : (
-        <div className="news-grid">
-          {news.map((item) => (
-            <div key={item.id} className="news-card">
-              <div className="news-content">
-                <span className="news-source">{item.source}</span>
-                <span className="news-date">{item.date}</span>
-                <h3 className="news-headline">{item.headline}</h3>
-                <p className="news-details">{item.details}</p>
-                <span className="news-category">{item.category.toUpperCase()}</span>
-              </div>
-            </div>
-          ))}
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading market news...</p>
         </div>
+      ) : (
+        <>
+          {filteredNews.length === 0 ? (
+            <p className="no-news-message">No news available for this category. Try selecting a different category or refresh the page.</p>
+          ) : (
+            <div className="news-grid">
+              {filteredNews.map((item, index) => (
+                <div key={`${item.id}-${index}`} className="news-card">
+                  <div className="news-image">
+                    {item.imageUrl ? (
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.headline} 
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentNode.appendChild(
+                            document.createElement('div')
+                          ).className = 'placeholder-image-error';
+                        }} 
+                      />
+                    ) : (
+                      <NewsPlaceholder source={item.source} />
+                    )}
+                  </div>
+                  <div className="news-content">
+                    <h3>{item.headline}</h3>
+                    <p>{item.details}</p>
+                    <div className="news-meta">
+                      <span className="news-source">{item.source}</span>
+                      <span className="news-date">{new Date(item.date).toLocaleDateString('en-IN')}</span>
+                    </div>
+                    {item.topics && item.topics.length > 0 && (
+                      <div className="news-topics">
+                        {item.topics.map((topic, topicIndex) => (
+                          <span key={`${item.id}-topic-${topicIndex}`} className="topic-tag">{topic}</span>
+                        ))}
+                      </div>
+                    )}
+                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="read-more-btn">
+                      Read Full Story
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
-      
-      <div className="news-disclaimer">
-        <p>Disclaimer: Market news provided for informational purposes only. Investment decisions should be based on thorough research.</p>
-        <p>Data Sources: Economic Times, Business Standard, Moneycontrol, NDTV Profit, Financial Express, Mint</p>
-      </div>
     </div>
-  )
+  );
 }
 
-export default MarketNews
+export default MarketNews;

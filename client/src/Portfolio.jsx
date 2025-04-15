@@ -17,6 +17,7 @@ function Portfolio() {
     profitPercentage: 0
   })
   const [loading, setLoading] = useState(true)
+  const [refreshCounter, setRefreshCounter] = useState(0)
 
   useEffect(() => {
     const fetchTradesAndCalculatePortfolio = async () => {
@@ -59,6 +60,9 @@ function Portfolio() {
           profit,
           profitPercentage
         });
+        
+        // Trigger chart refresh
+        setRefreshCounter(prev => prev + 1);
         
         toast.success('Portfolio data loaded');
       } catch (error) {
@@ -131,7 +135,7 @@ function Portfolio() {
           
           <div className="portfolio-chart-container">
             <ErrorBoundary>
-              <PortfolioChart />
+              <PortfolioChart refreshTrigger={refreshCounter} />
             </ErrorBoundary>
           </div>
           

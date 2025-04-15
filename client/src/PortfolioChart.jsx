@@ -10,12 +10,12 @@ import { API_URL } from './config'
 import { toast } from 'react-toastify'
 import './PortfolioChart.css'
 
-function PortfolioChart() {
+function PortfolioChart({ refreshTrigger = 0 }) {
   const { user } = useContext(AuthContext)
   const [rawData, setRawData] = useState([])
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
-  const [chartType, setChartType] = useState('line') // Changed from 'area' to 'line'
+  const [chartType, setChartType] = useState('line') 
   const [timeRange, setTimeRange] = useState('all')
   const [hoverData, setHoverData] = useState(null)
   const [crosshairValues, setCrosshairValues] = useState(null)
@@ -180,7 +180,7 @@ function PortfolioChart() {
     }
     
     fetchData();
-  }, [user]);
+  }, [user, refreshTrigger]);
 
   // Filter data based on selected time range whenever it changes
   useEffect(() => {
